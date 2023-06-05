@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/model/model.dart';
 import 'package:hive/hive.dart';
 
-class Addnote extends StatefulWidget {
+import '../main.dart';
+import '../model/model.dart';
+import 'addnote.dart';
+
+class Viewnote extends StatefulWidget {
   Note? note;
-  Addnote({
-    this.note,
-    super.key,
-  });
+  int? index;
+  Viewnote({this.note, this.index});
 
   @override
-  State<Addnote> createState() => _AddnoteState();
+  State<Viewnote> createState() => _ViewnoteState();
 }
 
-class _AddnoteState extends State<Addnote> {
-  late TextEditingController titlecontroller = TextEditingController();
-  late TextEditingController subtitlecontroller = TextEditingController();
-
+class _ViewnoteState extends State<Viewnote> {
+  late TextEditingController titlecontroller =
+      TextEditingController(text: widget.note!.title);
+  late TextEditingController subtitlecontroller =
+      TextEditingController(text: widget.note!.subtitle);
   late Box<Note> noteBox;
+
   @override
   void initState() {
     noteBox = Hive.box<Note>(noteBoxName);
@@ -27,25 +29,21 @@ class _AddnoteState extends State<Addnote> {
 
   @override
   Widget build(BuildContext context) {
-    Note? _notey;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: const Text("Add Note"),
+        title: const Text("Edit Note"),
         actions: [
           TextButton.icon(
             onPressed: () {
-              //add note in hive
-              final String title = titlecontroller.text;
-              final String subtitle = subtitlecontroller.text;
-
-              Note note = Note(
-                  title: title, subtitle: subtitle, dateTime: DateTime.now());
-              title.isNotEmpty && subtitle.isEmpty ? ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("body is required"))) : noteBox.add(note);
+              Note? note = noteBox.getAt(widget.index!);
+              Note newNote = note!.copyWith(
+                title: titlecontroller.text,
+                subtitle: subtitlecontroller.text,
+              );
+              noteBox.putAt(widget.index!, newNote);
 
               Navigator.pop(context);
-              titlecontroller.clear();
-              subtitlecontroller.clear();
             },
             icon: const Icon(Icons.add),
             label: const Text("Ok"),
@@ -68,9 +66,10 @@ class _AddnoteState extends State<Addnote> {
                     ),
                   ),
                   TextField(
+                    onTap: () => Addnote(),
                     controller: titlecontroller,
-                    style: TextStyle(fontSize: 17),
-                    decoration: InputDecoration(border: InputBorder.none),
+                    style: const TextStyle(fontSize: 17),
+                    decoration: const InputDecoration(border: InputBorder.none),
                   ),
                 ],
               ),
@@ -81,13 +80,13 @@ class _AddnoteState extends State<Addnote> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                onTap: () => Addnote(),
                 scrollPadding: EdgeInsets.all(8),
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 controller: subtitlecontroller,
-                style: TextStyle(fontSize: 13),
+                style: const TextStyle(fontSize: 13),
                 decoration: InputDecoration(
-                  hintText: 'Enter Note Here',
                   border: InputBorder.none,
                 ),
               ),

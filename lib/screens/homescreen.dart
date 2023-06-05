@@ -1,8 +1,7 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model/model.dart';
 import 'package:flutter_application_1/screens/addnote.dart';
+import 'package:flutter_application_1/screens/viewnote.dart';
 import 'package:hive_flutter/adapters.dart';
 import '../main.dart';
 import '../widget/notetile.dart';
@@ -18,6 +17,7 @@ class MyHomepage extends StatefulWidget {
 
 class _MyHomepageState extends State<MyHomepage> {
   late Box<Note> noteBox;
+  
 
   @override
   void initState() {
@@ -29,8 +29,8 @@ class _MyHomepageState extends State<MyHomepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Notebook"),
-        backgroundColor: Colors.blueAccent,
+        title: const Text("Notebook"),
+        backgroundColor: Colors.white,
       ),
       body: SafeArea(
         child: ValueListenableBuilder(
@@ -77,15 +77,19 @@ class _MyHomepageState extends State<MyHomepage> {
                         key: UniqueKey(),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return Addnote(
-                                note: Note(
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return Viewnote(
+                                  note: Note(
                                     title: note.title,
                                     subtitle: note.subtitle,
-                                    dateTime: note.dateTime),
-                              );
-                            }));
+                                    dateTime: note.dateTime,
+                                  ),
+                                  index: index,
+                                );
+                              }),
+                            );
                           },
                           child: NoteTile(
                             note: Note(
@@ -102,7 +106,7 @@ class _MyHomepageState extends State<MyHomepage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.grey[300],
           child: const Icon(Icons.add),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {

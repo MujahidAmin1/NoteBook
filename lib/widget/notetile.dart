@@ -18,10 +18,12 @@ class NoteTile extends StatelessWidget {
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      color: Colors.lightBlue,
+      color: Colors.grey[300],
       child: ListTile(
         title: Text(
-          note!.subtitle,
+          note!.subtitle.length > 40
+              ? note!.subtitle.substring(1, 41)
+              : note!.subtitle,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         subtitle: Text("$day/$month/$year, $time $symbol"),

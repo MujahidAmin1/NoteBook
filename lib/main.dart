@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model/model.dart';
 import 'package:flutter_application_1/screens/homescreen.dart';
-import 'package:flutter_application_1/screens/addnote.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';

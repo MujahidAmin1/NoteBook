@@ -3,23 +3,27 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/model/model.dart';
 import 'package:hive/hive.dart';
 
-class Notepage extends StatefulWidget {
-  const Notepage({
+class Addnote extends StatefulWidget {
+  Note? note;
+  Addnote({
+    this.note,
     super.key,
   });
 
   @override
-  State<Notepage> createState() => _NotepageState();
+  State<Addnote> createState() => _AddnoteState();
 }
 
-final TextEditingController titlecontroller = TextEditingController();
-final TextEditingController subtitlecontroller = TextEditingController();
+class _AddnoteState extends State<Addnote> {
+  late TextEditingController titlecontroller;
+  late TextEditingController subtitlecontroller;
 
-class _NotepageState extends State<Notepage> {
   late Box<Note> noteBox;
   @override
   void initState() {
-    // TODO: implement initState
+    titlecontroller = TextEditingController(text: widget.note!.title ?? '');
+    subtitlecontroller =
+        TextEditingController(text: widget.note!.subtitle ?? '');
     noteBox = Hive.box<Note>(noteBoxName);
     super.initState();
   }
@@ -29,22 +33,25 @@ class _NotepageState extends State<Notepage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text("Add Note"),
+        title: const Text("Add Note"),
         actions: [
-          TextButton(
-              onPressed: () {
-                //add note in hive
-                final String title = titlecontroller.text;
-                final String subtitle = subtitlecontroller.text;
+          TextButton.icon(
+            onPressed: () {
+              //add note in hive
+              final String title = titlecontroller.text;
+              final String subtitle = subtitlecontroller.text;
 
-                Note note = Note(title: title, subtitle: subtitle, dateTime: DateTime.now());
-                noteBox.add(note);
+              Note note = Note(
+                  title: title, subtitle: subtitle, dateTime: DateTime.now());
+              noteBox.add(note);
 
-                Navigator.pop(context);
-                titlecontroller.clear();
-                subtitlecontroller.clear();
-              },
-              child: Text("Done"))
+              Navigator.pop(context);
+              titlecontroller.clear();
+              subtitlecontroller.clear();
+            },
+            icon: const Icon(Icons.add),
+            label: const Text("Ok"),
+          )
         ],
       ),
       body: SingleChildScrollView(

@@ -1,8 +1,10 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model/model.dart';
+import 'package:flutter_application_1/screens/addnote.dart';
 import 'package:hive_flutter/adapters.dart';
 import '../main.dart';
-import 'addnote.dart';
 import '../widget/notetile.dart';
 
 class MyHomepage extends StatefulWidget {
@@ -28,7 +30,7 @@ class _MyHomepageState extends State<MyHomepage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Notebook"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blueAccent,
       ),
       body: SafeArea(
         child: ValueListenableBuilder(
@@ -65,17 +67,32 @@ class _MyHomepageState extends State<MyHomepage> {
                         ),
                         secondaryBackground: Container(
                           color: Colors.red,
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.end,
-                            children: [Icon(Icons.delete)],
+                            children: [
+                              Icon(Icons.delete),
+                            ],
                           ),
                         ),
                         key: UniqueKey(),
-                        child: NoteTile(
-                          note: Note(
-                            title: note!.title,
-                            subtitle: note.subtitle,
-                            dateTime: note.dateTime,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return Addnote(
+                                note: Note(
+                                    title: note.title,
+                                    subtitle: note.subtitle,
+                                    dateTime: note.dateTime),
+                              );
+                            }));
+                          },
+                          child: NoteTile(
+                            note: Note(
+                              title: note!.title,
+                              subtitle: note.subtitle,
+                              dateTime: note.dateTime,
+                            ),
                           ),
                         ),
                       );
@@ -85,9 +102,12 @@ class _MyHomepageState extends State<MyHomepage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blueAccent,
           child: const Icon(Icons.add),
           onPressed: () {
-            Navigator.pushNamed(context, '/first');
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return Addnote();
+            }));
           }),
     );
   }

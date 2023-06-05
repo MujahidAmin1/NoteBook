@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model/model.dart';
 
+// ignore: must_be_immutable
 class NoteTile extends StatelessWidget {
   Note? note;
 
